@@ -1,0 +1,70 @@
+# Database files
+*.sql
+*.sqlite
+*.db
+
+# Configuration files with sensitive data
+config/koneksi.php
+.env
+
+# Log files
+*.log
+logs/
+
+# Cache files
+cache/
+*.cache
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+*.backup
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Backup files
+backup/
+*.zip
+*.tar.gz
+
+# Session files
+sessions/
+
+# Upload files
+uploads/
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.pdf
+*.doc
+*.docx
+
+# Error logs
+error_log
+access_log
+
+# Node modules (if any)
+node_modules/
+
+# Composer (if any)
+vendor/
+composer.lock
+
+# Local development files
+local/
+dev/
