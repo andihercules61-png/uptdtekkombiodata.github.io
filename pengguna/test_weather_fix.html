@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Weather Fix</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .weather-display {
+            background: #e8f4fd;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        .weather-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            padding: 5px 0;
+            border-bottom: 1px solid #ddd;
+        }
+        .weather-label {
+            font-weight: bold;
+            color: #333;
+        }
+        .weather-value {
+            color: #666;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Test Weather Fix untuk User Login</h1>
+    
+    <div class="test-section">
+        <h2>📋 Status Test</h2>
+        <div id="testStatus" class="status info">Memulai test...</div>
+        <button onclick="runWeatherTest()">🚀 Jalankan Test Cuaca</button>
+        <button onclick="testMockData()">🎲 Test Data Mock</button>
+        <button onclick="clearTestResults()">🗑️ Bersihkan Hasil</button>
+    </div>
+    
+    <div class="test-section">
+        <h2>🌤️ Simulasi Informasi Cuaca (User Login)</h2>
+        <div class="weather-display">
+            <div class="weather-item">
+                <span class="weather-label">Lokasi:</span>
+                <span id="testLocation" class="weather-value">Mendeteksi lokasi...</span>
+            </div>
+            <div class="weather-item">
+                <span class="weather-label">Suhu:</span>
+                <span id="testTemp" class="weather-value">Loading...</span>
+            </div>
+            <div class="weather-item">
+                <span class="weather-label">Kelembaban:</span>
+                <span id="testHumidity" class="weather-value">Loading...</span>
+            </div>
+            <div class="weather-item">
+                <span class="weather-label">Kondisi:</span>
+                <span id="testCondition" class="weather-value">Loading...</span>
+            </div>
+            <div class="weather-item">
+                <span class="weather-label">Angin:</span>
+                <span id="testWind" class="weather-value">Loading...</span>
+            </div>
+            <div class="weather-item">
+                <span class="weather-label">Update:</span>
+                <span id="testTime" class="weather-value">Loading...</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>📊 Log Test</h2>
+        <div id="testLog" style="background: #f8f9fa; padding: 15px; border-radius: 5px; max-height: 300px; overflow-y: auto; font-family: monospace; font-size: 12px;">
+            Log akan muncul di sini...
+        </div>
+    </div>
+
+    <script>
+        // Simulasi fungsi-fungsi yang ada di index.php
+        let testLog = [];
+        
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString('id-ID');
+            const logEntry = `[${timestamp}] ${message}`;
+            testLog.push(logEntry);
+            
+            const logElement = document.getElementById('testLog');
+            if (logElement) {
+                logElement.innerHTML = testLog.map(entry => `<div>${entry}</div>`).join('');
+                logElement.scrollTop = logElement.scrollHeight;
+            }
+            
+            console.log(logEntry);
+        }
+        
+        function updateStatus(message, type = 'info') {
+            const statusElement = document.getElementById('testStatus');
+            if (statusElement) {
+                statusElement.textContent = message;
+                statusElement.className = `status ${type}`;
+            }
+        }
+        
+        // Simulasi fungsi getWeatherIcon
+        function getWeatherIcon(condition) {
+            const conditionLower = condition.toLowerCase();
+            
+            if (conditionLower.includes('cerah')) {
+                return '<i class="fas fa-sun weather-sun"></i>';
+            } else if (conditionLower.includes('berawan')) {
+                return '<i class="fas fa-cloud weather-cloud"></i>';
+            } else if (conditionLower.includes('hujan')) {
+                return '<i class="fas fa-cloud-rain weather-rain"></i>';
+            } else if (conditionLower.includes('mendung')) {
+                return '<i class="fas fa-cloud weather-cloud"></i>';
+            } else {
+                return '<i class="fas fa-cloud weather-cloud"></i>';
+            }
+        }
+        
+        // Simulasi fungsi getWeatherColor
+        function getWeatherColor(temp) {
+            if (temp >= 30) return '#FF6B6B';
+            if (temp >= 25) return '#FFD93D';
+            if (temp >= 20) return '#6BCB77';
+            if (temp >= 15) return '#4D96FF';
+            return '#B4B4B8';
+        }
+        
+        // Simulasi fungsi updateWeatherForLoggedInUser
+        function updateWeatherForLoggedInUser(weatherData) {
+            log('🔄 Updating weather display for logged in user...', 'info');
+            
+            try {
+                // Validate weather data
+                if (!weatherData || !weatherData.weather || !weatherData.weather[0] || !weatherData.main) {
+                    log('❌ Invalid weather data structure', 'error');
+                    return;
+                }
+                
+                // Get weather details
+                const temp = Math.round(weatherData.main.temp);
+                const humidity = weatherData.main.humidity;
+                const condition = weatherData.weather[0].description;
+                const windSpeed = weatherData.wind?.speed ? Math.round(weatherData.wind.speed * 3.6) : 'N/A';
+                const location = weatherData.name || 'Lokasi Anda';
+                const updateTime = new Date().toLocaleTimeString('id-ID');
+                
+                log(`🌤️ Weather details: ${temp}°C, ${humidity}%, ${condition}`, 'info');
+                
+                // Update display elements
+                const elements = {
+                    'testLocation': location,
+                    'testTemp': `${temp}°C`,
+                    'testHumidity': `${humidity}%`,
+                    'testCondition': condition,
+                    'testWind': `${windSpeed} km/h`,
+                    'testTime': `Update: ${updateTime}`
+                };
+                
+                Object.entries(elements).forEach(([id, value]) => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.textContent = value;
+                        element.style.color = id === 'testTemp' ? getWeatherColor(temp) : '#333';
+                        log(`✅ Updated ${id} to: ${value}`, 'success');
+                    } else {
+                        log(`⚠️ Element ${id} not found`, 'error');
+                    }
+                });
+                
+                log('✅ Weather display updated successfully for logged in user', 'success');
+                updateStatus('✅ Test cuaca berhasil! Data cuaca telah diupdate.', 'success');
+                
+            } catch (error) {
+                log(`❌ Error updating weather display: ${error.message}`, 'error');
+                updateStatus('❌ Error saat update cuaca', 'error');
+            }
+        }
+        
+        // Simulasi fungsi generateWeatherByLocation
+        function generateWeatherByLocation(lat, lon) {
+            log('🎲 Generating mock weather data...', 'info');
+            
+            const temp = Math.floor(Math.random() * 20) + 15; // 15-35°C
+            const humidity = Math.floor(Math.random() * 30) + 60; // 60-90%
+            const windSpeed = Math.floor(Math.random() * 15) + 3; // 3-18 km/h
+            
+            const hour = new Date().getHours();
+            let condition;
+            
+            if (hour >= 6 && hour <= 18) {
+                if (temp > 30) condition = 'Cerah Berawan';
+                else if (temp > 25) condition = 'Cerah';
+                else condition = 'Berawan';
+            } else {
+                condition = 'Mendung';
+            }
+            
+            if (Math.random() > 0.7) {
+                condition = 'Hujan Ringan';
+            }
+            
+            const mockData = {
+                main: { temp, humidity },
+                weather: [{ description: condition }],
+                wind: { speed: windSpeed },
+                name: 'Lokasi Test'
+            };
+            
+            log(`🎲 Mock data generated: ${temp}°C, ${humidity}%, ${condition}`, 'info');
+            return mockData;
+        }
+        
+        // Test utama
+        function runWeatherTest() {
+            log('🚀 Starting weather test...', 'info');
+            updateStatus('🔄 Menjalankan test cuaca...', 'info');
+            
+            // Simulasi delay untuk geolocation
+            setTimeout(() => {
+                log('📍 Simulating geolocation success...', 'info');
+                
+                // Simulasi data cuaca dari API
+                const mockWeatherData = {
+                    main: {
+                        temp: 28,
+                        humidity: 75
+                    },
+                    weather: [{
+                        description: 'Cerah Berawan'
+                    }],
+                    wind: {
+                        speed: 8
+                    },
+                    name: 'Samarinda'
+                };
+                
+                log('🌤️ Simulated weather data received', 'info');
+                updateWeatherForLoggedInUser(mockWeatherData);
+                
+            }, 1000);
+        }
+        
+        // Test data mock
+        function testMockData() {
+            log('🎲 Testing mock data generation...', 'info');
+            updateStatus('🎲 Testing data mock...', 'info');
+            
+            const mockData = generateWeatherByLocation(0, 0);
+            updateWeatherForLoggedInUser(mockData);
+        }
+        
+        // Bersihkan hasil
+        function clearTestResults() {
+            log('🗑️ Clearing test results...', 'info');
+            updateStatus('🗑️ Hasil test dibersihkan', 'info');
+            
+            const elements = ['testLocation', 'testTemp', 'testHumidity', 'testCondition', 'testWind', 'testTime'];
+            elements.forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.textContent = 'Loading...';
+                    element.style.color = '#666';
+                }
+            });
+            
+            testLog = [];
+            document.getElementById('testLog').innerHTML = 'Log telah dibersihkan...';
+        }
+        
+        // Auto-run test saat halaman dimuat
+        window.addEventListener('load', function() {
+            log('📱 Test page loaded successfully', 'success');
+            updateStatus('📱 Halaman test siap', 'success');
+            
+            // Auto-run test setelah 2 detik
+            setTimeout(() => {
+                log('⏰ Auto-running weather test...', 'info');
+                runWeatherTest();
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
